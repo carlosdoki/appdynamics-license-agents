@@ -1,0 +1,58 @@
+@controller = https://.saas.appdynamics.com
+@authorization = 
+
+GET {{controller}}/controller/auth?action=logout
+Authorization: Basic {{authorization}}
+
+
+###
+GET {{controller}}/controller/auth?action=login
+Authorization: Basic {{authorization}}
+
+###
+@X-CSRF-TOKEN  = 
+
+###
+# @name apps
+POST {{controller}}/controller/restui/v1/app/list/all
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic {{authorization}}
+X-CSRF-TOKEN: {{X-CSRF-TOKEN}}
+
+{"requestFilter":{"filters":[{"field":"TYPE","criteria":"APM","operator":"EQUAL_TO"}],"queryParams":null},"searchFilters":[],"timeRangeStart":1672225001867,"timeRangeEnd":1672228601867,"columnSorts":[{"column":"CALLS","direction":"DESC"}],"resultColumns":["NAME"],"offset":0,"limit":-1}
+
+###
+@data = {{apps.response.body.data}}
+
+####
+POST {{controller}}/controller/restui/v1/app/list/ids
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic {{authorization}}
+X-CSRF-TOKEN: {{X-CSRF-TOKEN}}
+
+{"requestFilter":{{data}},"timeRangeStart":1672225002440,"timeRangeEnd":1672228602440,"searchFilters":null,"columnSorts":null,"resultColumns":["APP_OVERALL_HEALTH","CALLS","CALLS_PER_MINUTE","AVERAGE_RESPONSE_TIME","ERROR_PERCENT","ERRORS","ERRORS_PER_MINUTE","NODE_HEALTH","BT_HEALTH"],"offset":0,"limit":-1}
+
+###
+POST {{controller}}/controller/restui/v1/nodes/list/health
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic {{authorization}}
+X-CSRF-TOKEN: {{X-CSRF-TOKEN}}
+
+{"requestFilter":{"queryParams":{"applicationId":7376,"performanceDataFilter":"REPORTING"},"filters":[]},"resultColumns":["NODE_NAME","TIER"],"offset":0,"limit":-1,"searchFilters":[],"columnSorts":[{"column":"TIER","direction":"ASC"}],"timeRangeStart":1672229921520,"timeRangeEnd":1672233521520}
+
+###
+GET {{controller}}/controller/restui/components/getNodeViewData/7376/18918547
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic {{authorization}}
+X-CSRF-TOKEN: {{X-CSRF-TOKEN}}
+
+###
+GET {{controller}}/controller/restui/nodeUiService/getAgentAvailabilitySummaryForNode/18918547?timerange=Custom_Time_Range.BETWEEN_TIMES.1672241078366.1672237478366.60
+Accept: application/json, text/plain, */*
+Content-Type: application/json;charset=UTF-8
+Authorization: Basic {{authorization}}
+X-CSRF-TOKEN: {{X-CSRF-TOKEN}}
